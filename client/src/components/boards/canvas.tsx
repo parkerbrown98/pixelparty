@@ -72,7 +72,7 @@ export default function Canvas() {
           .fill(0xff0000);
       }
     },
-    [width, height, mouseX, mouseY, pixels]
+    [width, height, zoom, mouseX, mouseY, pixels]
   );
 
   const handlePaint = (x: number, y: number) => {
@@ -137,7 +137,7 @@ export default function Canvas() {
   };
 
   return (
-    <div ref={containerRef} className="w-full h-[90vh]">
+    <div ref={containerRef} className="w-full h-full absolute top-0 left-0">
       <Application
         resizeTo={containerRef}
         antialias={false}
