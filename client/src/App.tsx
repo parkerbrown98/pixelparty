@@ -1,6 +1,5 @@
 import Navbar from "./components/app/navbar";
 import Toolbar from "./components/app/toolbar";
-import BoardList from "./components/boards/board-list";
 import Canvas from "./components/boards/canvas";
 import { AppProvider } from "./lib/providers/app";
 
