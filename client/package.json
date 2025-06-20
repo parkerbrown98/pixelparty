@@ -11,9 +11,12 @@
   },
   "dependencies": {
     "@clockworklabs/spacetimedb-sdk": "^1.1.0",
+    "@headlessui/react": "^2.2.4",
     "@pixi/events": "^7.4.3",
     "@pixi/react": "^8.0.2",
     "@tailwindcss/vite": "^4.1.10",
+    "classnames": "^2.5.1",
+    "lucide-react": "^0.519.0",
     "pixi.js": "^8.10.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
