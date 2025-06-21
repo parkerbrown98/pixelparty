@@ -36,7 +36,6 @@ import {
 export type AddPixel = {
   x: number,
   y: number,
-  color: string,
 };
 
 /**
@@ -51,7 +50,6 @@ export namespace AddPixel {
     return AlgebraicType.createProductType([
       new ProductTypeElement("x", AlgebraicType.createU32Type()),
       new ProductTypeElement("y", AlgebraicType.createU32Type()),
-      new ProductTypeElement("color", AlgebraicType.createStringType()),
     ]);
   }
 

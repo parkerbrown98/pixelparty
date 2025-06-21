@@ -36,6 +36,7 @@ export type Board = {
   id: number,
   name: string,
   identity: Identity,
+  colors: string[],
   createdAt: Timestamp,
 };
 
@@ -52,6 +53,7 @@ export namespace Board {
       new ProductTypeElement("id", AlgebraicType.createU32Type()),
       new ProductTypeElement("name", AlgebraicType.createStringType()),
       new ProductTypeElement("identity", AlgebraicType.createIdentityType()),
+      new ProductTypeElement("colors", AlgebraicType.createArrayType(AlgebraicType.createStringType())),
       new ProductTypeElement("createdAt", AlgebraicType.createTimestampType()),
     ]);
   }

@@ -44,12 +44,18 @@ import { ClientDisconnected } from "./client_disconnected_reducer.ts";
 export { ClientDisconnected };
 import { CreateBoard } from "./create_board_reducer.ts";
 export { CreateBoard };
+import { DeleteMessage } from "./delete_message_reducer.ts";
+export { DeleteMessage };
 import { JoinBoard } from "./join_board_reducer.ts";
 export { JoinBoard };
 import { LeaveBoard } from "./leave_board_reducer.ts";
 export { LeaveBoard };
 import { SendMessage } from "./send_message_reducer.ts";
 export { SendMessage };
+import { SetColor } from "./set_color_reducer.ts";
+export { SetColor };
+import { SetName } from "./set_name_reducer.ts";
+export { SetName };
 
 // Import and reexport all table handle types
 import { BoardTableHandle } from "./board_table.ts";
@@ -131,6 +137,10 @@ const REMOTE_MODULE = {
       reducerName: "create_board",
       argsType: CreateBoard.getTypeScriptAlgebraicType(),
     },
+    delete_message: {
+      reducerName: "delete_message",
+      argsType: DeleteMessage.getTypeScriptAlgebraicType(),
+    },
     join_board: {
       reducerName: "join_board",
       argsType: JoinBoard.getTypeScriptAlgebraicType(),
@@ -142,6 +152,14 @@ const REMOTE_MODULE = {
     send_message: {
       reducerName: "send_message",
       argsType: SendMessage.getTypeScriptAlgebraicType(),
+    },
+    set_color: {
+      reducerName: "set_color",
+      argsType: SetColor.getTypeScriptAlgebraicType(),
+    },
+    set_name: {
+      reducerName: "set_name",
+      argsType: SetName.getTypeScriptAlgebraicType(),
     },
   },
   versionInfo: {
@@ -178,27 +196,30 @@ export type Reducer = never
 | { name: "ClientConnected", args: ClientConnected }
 | { name: "ClientDisconnected", args: ClientDisconnected }
 | { name: "CreateBoard", args: CreateBoard }
+| { name: "DeleteMessage", args: DeleteMessage }
 | { name: "JoinBoard", args: JoinBoard }
 | { name: "LeaveBoard", args: LeaveBoard }
 | { name: "SendMessage", args: SendMessage }
+| { name: "SetColor", args: SetColor }
+| { name: "SetName", args: SetName }
 ;
 
 export class RemoteReducers {
   constructor(private connection: DbConnectionImpl, private setCallReducerFlags: SetReducerFlags) {}
 
-  addPixel(x: number, y: number, color: string) {
-    const __args = { x, y, color };
+  addPixel(x: number, y: number) {
+    const __args = { x, y };
     let __writer = new BinaryWriter(1024);
     AddPixel.getTypeScriptAlgebraicType().serialize(__writer, __args);
     let __argsBuffer = __writer.getBuffer();
     this.connection.callReducer("add_pixel", __argsBuffer, this.setCallReducerFlags.addPixelFlags);
   }
 
-  onAddPixel(callback: (ctx: ReducerEventContext, x: number, y: number, color: string) => void) {
+  onAddPixel(callback: (ctx: ReducerEventContext, x: number, y: number) => void) {
     this.connection.onReducer("add_pixel", callback);
   }
 
-  removeOnAddPixel(callback: (ctx: ReducerEventContext, x: number, y: number, color: string) => void) {
+  removeOnAddPixel(callback: (ctx: ReducerEventContext, x: number, y: number) => void) {
     this.connection.offReducer("add_pixel", callback);
   }
 
@@ -230,20 +251,36 @@ export class RemoteReducers {
     this.connection.offReducer("client_disconnected", callback);
   }
 
-  createBoard(name: string) {
-    const __args = { name };
+  createBoard(name: string, colors: string[]) {
+    const __args = { name, colors };
     let __writer = new BinaryWriter(1024);
     CreateBoard.getTypeScriptAlgebraicType().serialize(__writer, __args);
     let __argsBuffer = __writer.getBuffer();
     this.connection.callReducer("create_board", __argsBuffer, this.setCallReducerFlags.createBoardFlags);
   }
 
-  onCreateBoard(callback: (ctx: ReducerEventContext, name: string) => void) {
+  onCreateBoard(callback: (ctx: ReducerEventContext, name: string, colors: string[]) => void) {
     this.connection.onReducer("create_board", callback);
   }
 
-  removeOnCreateBoard(callback: (ctx: ReducerEventContext, name: string) => void) {
+  removeOnCreateBoard(callback: (ctx: ReducerEventContext, name: string, colors: string[]) => void) {
     this.connection.offReducer("create_board", callback);
+  }
+
+  deleteMessage(messageId: number) {
+    const __args = { messageId };
+    let __writer = new BinaryWriter(1024);
+    DeleteMessage.getTypeScriptAlgebraicType().serialize(__writer, __args);
+    let __argsBuffer = __writer.getBuffer();
+    this.connection.callReducer("delete_message", __argsBuffer, this.setCallReducerFlags.deleteMessageFlags);
+  }
+
+  onDeleteMessage(callback: (ctx: ReducerEventContext, messageId: number) => void) {
+    this.connection.onReducer("delete_message", callback);
+  }
+
+  removeOnDeleteMessage(callback: (ctx: ReducerEventContext, messageId: number) => void) {
+    this.connection.offReducer("delete_message", callback);
   }
 
   joinBoard(boardId: number) {
@@ -290,6 +327,38 @@ export class RemoteReducers {
     this.connection.offReducer("send_message", callback);
   }
 
+  setColor(color: string) {
+    const __args = { color };
+    let __writer = new BinaryWriter(1024);
+    SetColor.getTypeScriptAlgebraicType().serialize(__writer, __args);
+    let __argsBuffer = __writer.getBuffer();
+    this.connection.callReducer("set_color", __argsBuffer, this.setCallReducerFlags.setColorFlags);
+  }
+
+  onSetColor(callback: (ctx: ReducerEventContext, color: string) => void) {
+    this.connection.onReducer("set_color", callback);
+  }
+
+  removeOnSetColor(callback: (ctx: ReducerEventContext, color: string) => void) {
+    this.connection.offReducer("set_color", callback);
+  }
+
+  setName(name: string) {
+    const __args = { name };
+    let __writer = new BinaryWriter(1024);
+    SetName.getTypeScriptAlgebraicType().serialize(__writer, __args);
+    let __argsBuffer = __writer.getBuffer();
+    this.connection.callReducer("set_name", __argsBuffer, this.setCallReducerFlags.setNameFlags);
+  }
+
+  onSetName(callback: (ctx: ReducerEventContext, name: string) => void) {
+    this.connection.onReducer("set_name", callback);
+  }
+
+  removeOnSetName(callback: (ctx: ReducerEventContext, name: string) => void) {
+    this.connection.offReducer("set_name", callback);
+  }
+
 }
 
 export class SetReducerFlags {
@@ -308,6 +377,11 @@ export class SetReducerFlags {
     this.createBoardFlags = flags;
   }
 
+  deleteMessageFlags: CallReducerFlags = 'FullUpdate';
+  deleteMessage(flags: CallReducerFlags) {
+    this.deleteMessageFlags = flags;
+  }
+
   joinBoardFlags: CallReducerFlags = 'FullUpdate';
   joinBoard(flags: CallReducerFlags) {
     this.joinBoardFlags = flags;
@@ -321,6 +395,16 @@ export class SetReducerFlags {
   sendMessageFlags: CallReducerFlags = 'FullUpdate';
   sendMessage(flags: CallReducerFlags) {
     this.sendMessageFlags = flags;
+  }
+
+  setColorFlags: CallReducerFlags = 'FullUpdate';
+  setColor(flags: CallReducerFlags) {
+    this.setColorFlags = flags;
+  }
+
+  setNameFlags: CallReducerFlags = 'FullUpdate';
+  setName(flags: CallReducerFlags) {
+    this.setNameFlags = flags;
   }
 
 }

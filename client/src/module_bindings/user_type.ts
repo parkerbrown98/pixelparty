@@ -37,6 +37,9 @@ export type User = {
   name: string | undefined,
   online: boolean,
   currentBoard: number | undefined,
+  currentColor: string | undefined,
+  admin: boolean,
+  createdAt: Timestamp,
 };
 
 /**
@@ -53,6 +56,9 @@ export namespace User {
       new ProductTypeElement("name", AlgebraicType.createOptionType(AlgebraicType.createStringType())),
       new ProductTypeElement("online", AlgebraicType.createBoolType()),
       new ProductTypeElement("currentBoard", AlgebraicType.createOptionType(AlgebraicType.createU32Type())),
+      new ProductTypeElement("currentColor", AlgebraicType.createOptionType(AlgebraicType.createStringType())),
+      new ProductTypeElement("admin", AlgebraicType.createBoolType()),
+      new ProductTypeElement("createdAt", AlgebraicType.createTimestampType()),
     ]);
   }
 

@@ -33,15 +33,14 @@ import {
   type SubscriptionEventContextInterface,
 } from "@clockworklabs/spacetimedb-sdk";
 
-export type CreateBoard = {
+export type SetName = {
   name: string,
-  colors: string[],
 };
 
 /**
  * A namespace for generated helper functions.
  */
-export namespace CreateBoard {
+export namespace SetName {
   /**
   * A function which returns this type represented as an AlgebraicType.
   * This function is derived from the AlgebraicType used to generate this type.
@@ -49,16 +48,15 @@ export namespace CreateBoard {
   export function getTypeScriptAlgebraicType(): AlgebraicType {
     return AlgebraicType.createProductType([
       new ProductTypeElement("name", AlgebraicType.createStringType()),
-      new ProductTypeElement("colors", AlgebraicType.createArrayType(AlgebraicType.createStringType())),
     ]);
   }
 
-  export function serialize(writer: BinaryWriter, value: CreateBoard): void {
-    CreateBoard.getTypeScriptAlgebraicType().serialize(writer, value);
+  export function serialize(writer: BinaryWriter, value: SetName): void {
+    SetName.getTypeScriptAlgebraicType().serialize(writer, value);
   }
 
-  export function deserialize(reader: BinaryReader): CreateBoard {
-    return CreateBoard.getTypeScriptAlgebraicType().deserialize(reader);
+  export function deserialize(reader: BinaryReader): SetName {
+    return SetName.getTypeScriptAlgebraicType().deserialize(reader);
   }
 
 }

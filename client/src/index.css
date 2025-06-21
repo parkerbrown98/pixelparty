@@ -12,6 +12,6 @@ h3 {
   @apply text-xl font-medium;
 }
 
-p {
-  @apply text-base leading-relaxed;
+button {
+  @apply cursor-pointer;
 }

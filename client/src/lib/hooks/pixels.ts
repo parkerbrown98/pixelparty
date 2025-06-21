@@ -3,12 +3,11 @@ import { useAppContext } from "../context/app";
 import type { Pixel } from "../../module_bindings";
 
 export function usePixels() {
-  const { addQueries, removeQueries, conn } = useAppContext();
+  const { conn } = useAppContext();
   const [pixels, setPixels] = useState<Pixel[]>([]);
 
   useEffect(() => {
     if (!conn) return;
-    addQueries(["SELECT * FROM pixel"]);
 
     const onInsert = (_ctx: any, pixel: Pixel) => {
       setPixels((prev) => [...prev, pixel]);
@@ -31,7 +30,6 @@ export function usePixels() {
       conn.db.pixel.removeOnInsert(onInsert);
       conn.db.pixel.removeOnUpdate(onUpdate);
       conn.db.pixel.removeOnDelete(onDelete);
-      removeQueries(["SELECT * FROM pixels"]);
     };
   }, [conn]);
 
