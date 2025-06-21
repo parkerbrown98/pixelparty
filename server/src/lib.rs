@@ -3,6 +3,7 @@ use spacetimedb::{reducer, table, Identity, ReducerContext, Table, Timestamp};
 mod board_reducers;
 mod message_reducers;
 mod pixel_reducers;
+mod user_reducers;
 
 #[table(name = user, public)]
 pub struct User {
@@ -11,6 +12,9 @@ pub struct User {
     name: Option<String>,
     online: bool,
     current_board: Option<u32>,
+    current_color: Option<String>,
+    admin: bool,
+    created_at: Timestamp,
 }
 
 #[table(name = board, public)]
@@ -21,6 +25,7 @@ pub struct Board {
     name: String,
     #[index(btree)]
     identity: Identity,
+    colors: Vec<String>,
     created_at: Timestamp,
 }
 
@@ -54,17 +59,27 @@ pub struct Pixel {
 
 #[reducer(client_connected)]
 pub fn client_connected(ctx: &ReducerContext) {
-    if let Some(user) = ctx.db.user().identity().find(ctx.sender) {
-        ctx.db.user().identity().update(User {
-            online: true,
-            ..user
-        });
+    if let Some(mut user) = ctx.db.user().identity().find(ctx.sender) {
+        // Handle non-existent board
+        if let Some(board_id) = user.current_board {
+            if ctx.db.board().id().find(board_id).is_none() {
+                user.current_board = None; // Reset to None if board does not exist
+                user.current_color = None; // Reset color as well
+            }
+        }
+
+        user.online = true;
+        ctx.db.user().identity().update(user);
     } else {
+        let is_first_user = ctx.db.user().count() == 0;
         ctx.db.user().insert(User {
             identity: ctx.sender,
             name: None,
             online: true,
-            current_board: None,
+            current_board: Some(0), // For testing
+            current_color: None,
+            admin: is_first_user, // First user is admin
+            created_at: ctx.timestamp,
         });
     }
 }
@@ -73,8 +88,8 @@ pub fn client_connected(ctx: &ReducerContext) {
 pub fn client_disconnected(ctx: &ReducerContext) {
     if let Some(user) = ctx.db.user().identity().find(ctx.sender) {
         ctx.db.user().identity().update(User {
-            // online: false,
-            // current_board: None,
+            online: false,
+            current_board: None,
             ..user
         });
     }
