@@ -1,6 +1,6 @@
 import type { Identity } from "@clockworklabs/spacetimedb-sdk";
 import { createContext, useContext } from "react";
-import type { Board, DbConnection, SubscriptionBuilder } from "../../module_bindings";
+import type { Board, DbConnection } from "../../module_bindings";
 
 export interface AppContext {
   identity: Identity | null;
