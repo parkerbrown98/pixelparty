@@ -38,9 +38,9 @@ export function useSpacetimeDb() {
     };
 
     const connection = DbConnection.builder()
-      .withUri("ws://10.65.0.100:3000")
+      .withUri("wss://maincloud.spacetimedb.com")
       .withModuleName("pixelparty")
-      .withToken(localStorage.getItem("auth_token") || "")
+      .withToken(localStorage.getItem("auth_token") || undefined)
       .onConnect(onConnect)
       .onDisconnect(onDisconnect)
       .onConnectError(onConnectError)
