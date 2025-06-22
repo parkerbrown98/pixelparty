@@ -1,6 +1,6 @@
 use spacetimedb::{reducer, ReducerContext};
 
-use crate::{board, user, User};
+use crate::{board, user, User, ToolType};
 
 fn validate_name(name: &str) -> bool {
     // Simple validation: name must be non-empty and less than 50 characters
@@ -70,6 +70,24 @@ pub fn set_color(ctx: &ReducerContext, color: String) -> Result<(), String> {
         // Handle case where user does not exist
         log::warn!(
             "Attempted to set color for non-existent user: {}",
+            ctx.sender
+        );
+        Err("User not found".to_string())
+    }
+}
+
+#[reducer]
+pub fn set_tool(ctx: &ReducerContext, tool: ToolType) -> Result<(), String> {
+    if let Some(user) = ctx.db.user().identity().find(ctx.sender) {
+        ctx.db.user().identity().update(User {
+            current_tool: tool,
+            ..user
+        });
+        Ok(())
+    } else {
+        // Handle case where user does not exist
+        log::warn!(
+            "Attempted to set tool for non-existent user: {}",
             ctx.sender
         );
         Err("User not found".to_string())

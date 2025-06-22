@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { User } from "../../module_bindings";
+import type { ToolType, User } from "../../module_bindings";
 import { useAppContext } from "../context/app";
 import { UserContext } from "../context/user";
 
@@ -61,12 +61,18 @@ export default function UserProvider({
         conn.reducers.setName(name);
     };
 
+    const setTool = (tool: ToolType) => {
+        if (!conn || !ourUser) return;
+        conn.reducers.setTool(tool);
+    };
+
     return (
         <UserContext.Provider
             value={{
                 users,
                 ourUser,
                 setUserName,
+                setTool,
             }}
         >
             {children}

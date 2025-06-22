@@ -1,9 +1,15 @@
-use spacetimedb::{reducer, table, Identity, ReducerContext, Table, Timestamp};
+use spacetimedb::{reducer, table, Identity, ReducerContext, SpacetimeType, Table, Timestamp};
 
 mod board_reducers;
 mod message_reducers;
 mod pixel_reducers;
 mod user_reducers;
+
+#[derive(SpacetimeType)]
+pub enum ToolType {
+    Brush = 0,
+    Eraser = 1,
+}
 
 #[table(name = user, public)]
 pub struct User {
@@ -13,6 +19,7 @@ pub struct User {
     online: bool,
     current_board: Option<u32>,
     current_color: Option<String>,
+    current_tool: ToolType,
     admin: bool,
     created_at: Timestamp,
 }
@@ -76,8 +83,9 @@ pub fn client_connected(ctx: &ReducerContext) {
             identity: ctx.sender,
             name: None,
             online: true,
-            current_board: Some(0), // For testing
+            current_board: None,
             current_color: None,
+            current_tool: ToolType::Brush,
             admin: is_first_user, // First user is admin
             created_at: ctx.timestamp,
         });

@@ -1,8 +1,6 @@
 import { createContext, useContext } from "react";
 import type { Message, Pixel, User } from "../../module_bindings";
 
-type ToolType = "brush" | "eraser";
-
 export interface CanvasContext {
     canvasId: number | null;
     messages: Message[];

@@ -56,6 +56,8 @@ import { SetColor } from "./set_color_reducer.ts";
 export { SetColor };
 import { SetName } from "./set_name_reducer.ts";
 export { SetName };
+import { SetTool } from "./set_tool_reducer.ts";
+export { SetTool };
 
 // Import and reexport all table handle types
 import { BoardTableHandle } from "./board_table.ts";
@@ -74,6 +76,8 @@ import { Message } from "./message_type.ts";
 export { Message };
 import { Pixel } from "./pixel_type.ts";
 export { Pixel };
+import { ToolType } from "./tool_type_type.ts";
+export { ToolType };
 import { User } from "./user_type.ts";
 export { User };
 
@@ -161,6 +165,10 @@ const REMOTE_MODULE = {
       reducerName: "set_name",
       argsType: SetName.getTypeScriptAlgebraicType(),
     },
+    set_tool: {
+      reducerName: "set_tool",
+      argsType: SetTool.getTypeScriptAlgebraicType(),
+    },
   },
   versionInfo: {
     cliVersion: "1.2.0",
@@ -202,6 +210,7 @@ export type Reducer = never
 | { name: "SendMessage", args: SendMessage }
 | { name: "SetColor", args: SetColor }
 | { name: "SetName", args: SetName }
+| { name: "SetTool", args: SetTool }
 ;
 
 export class RemoteReducers {
@@ -359,6 +368,22 @@ export class RemoteReducers {
     this.connection.offReducer("set_name", callback);
   }
 
+  setTool(tool: ToolType) {
+    const __args = { tool };
+    let __writer = new BinaryWriter(1024);
+    SetTool.getTypeScriptAlgebraicType().serialize(__writer, __args);
+    let __argsBuffer = __writer.getBuffer();
+    this.connection.callReducer("set_tool", __argsBuffer, this.setCallReducerFlags.setToolFlags);
+  }
+
+  onSetTool(callback: (ctx: ReducerEventContext, tool: ToolType) => void) {
+    this.connection.onReducer("set_tool", callback);
+  }
+
+  removeOnSetTool(callback: (ctx: ReducerEventContext, tool: ToolType) => void) {
+    this.connection.offReducer("set_tool", callback);
+  }
+
 }
 
 export class SetReducerFlags {
@@ -405,6 +430,11 @@ export class SetReducerFlags {
   setNameFlags: CallReducerFlags = 'FullUpdate';
   setName(flags: CallReducerFlags) {
     this.setNameFlags = flags;
+  }
+
+  setToolFlags: CallReducerFlags = 'FullUpdate';
+  setTool(flags: CallReducerFlags) {
+    this.setToolFlags = flags;
   }
 
 }

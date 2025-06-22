@@ -1,16 +1,18 @@
 import { createContext, useContext } from "react";
-import type { User } from "../../module_bindings";
+import type { ToolType, User } from "../../module_bindings";
 
 export interface UserContext {
     users: User[];
     ourUser: User | undefined;
     setUserName: (name: string) => void;
+    setTool: (tool: ToolType) => void;
 }
 
 export const UserContext = createContext<UserContext>({
     users: [],
     ourUser: undefined,
     setUserName: () => { },
+    setTool: () => { },
 });
 
 export function useUsers() {

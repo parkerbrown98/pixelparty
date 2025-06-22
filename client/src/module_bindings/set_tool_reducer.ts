@@ -32,48 +32,34 @@ import {
   type ReducerEventContextInterface,
   type SubscriptionEventContextInterface,
 } from "@clockworklabs/spacetimedb-sdk";
+
 import { ToolType as __ToolType } from "./tool_type_type";
 
-export type User = {
-  identity: Identity,
-  name: string | undefined,
-  online: boolean,
-  currentBoard: number | undefined,
-  currentColor: string | undefined,
-  currentTool: __ToolType,
-  admin: boolean,
-  createdAt: Timestamp,
+export type SetTool = {
+  tool: __ToolType,
 };
 
 /**
  * A namespace for generated helper functions.
  */
-export namespace User {
+export namespace SetTool {
   /**
   * A function which returns this type represented as an AlgebraicType.
   * This function is derived from the AlgebraicType used to generate this type.
   */
   export function getTypeScriptAlgebraicType(): AlgebraicType {
     return AlgebraicType.createProductType([
-      new ProductTypeElement("identity", AlgebraicType.createIdentityType()),
-      new ProductTypeElement("name", AlgebraicType.createOptionType(AlgebraicType.createStringType())),
-      new ProductTypeElement("online", AlgebraicType.createBoolType()),
-      new ProductTypeElement("currentBoard", AlgebraicType.createOptionType(AlgebraicType.createU32Type())),
-      new ProductTypeElement("currentColor", AlgebraicType.createOptionType(AlgebraicType.createStringType())),
-      new ProductTypeElement("currentTool", __ToolType.getTypeScriptAlgebraicType()),
-      new ProductTypeElement("admin", AlgebraicType.createBoolType()),
-      new ProductTypeElement("createdAt", AlgebraicType.createTimestampType()),
+      new ProductTypeElement("tool", __ToolType.getTypeScriptAlgebraicType()),
     ]);
   }
 
-  export function serialize(writer: BinaryWriter, value: User): void {
-    User.getTypeScriptAlgebraicType().serialize(writer, value);
+  export function serialize(writer: BinaryWriter, value: SetTool): void {
+    SetTool.getTypeScriptAlgebraicType().serialize(writer, value);
   }
 
-  export function deserialize(reader: BinaryReader): User {
-    return User.getTypeScriptAlgebraicType().deserialize(reader);
+  export function deserialize(reader: BinaryReader): SetTool {
+    return SetTool.getTypeScriptAlgebraicType().deserialize(reader);
   }
 
 }
-
 
