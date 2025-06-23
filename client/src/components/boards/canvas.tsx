@@ -16,7 +16,7 @@ extend({
 
 export default function Canvas() {
     const { ourUser } = useUsers();
-    const { pixels, paint, gridEnabled } = useCanvas();
+    const { pixels, paint, erase, gridEnabled } = useCanvas();
     const [width, _setWidth] = useState(500);
     const [height, _setHeight] = useState(500);
     const [zoom, setZoom] = useState(5);
@@ -113,8 +113,13 @@ export default function Canvas() {
 
     const handleMouseUp = () => {
         if (isDragging && !dragStarted) {
-            // Paint pixel if mouse was not dragged
-            paint(mouseX, mouseY);
+            if (ourUser?.currentTool.tag === "Brush") {
+                // Paint pixel if mouse was not dragged
+                paint(mouseX, mouseY);
+            } else if (ourUser?.currentTool.tag === "Eraser") {
+                // Erase pixel if mouse was not dragged
+                erase(mouseX, mouseY);
+            }
         }
         setIsDragging(false);
         setDragStarted(false);

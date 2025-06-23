@@ -8,6 +8,7 @@ export interface CanvasContext {
     pixels: Pixel[];
     availableColors: string[];
     paint: (x: number, y: number) => void;
+    erase: (x: number, y: number) => void;
     chatEnabled?: boolean;
     setChatEnabled: (enabled: boolean) => void;
     sendMessage: (message: string) => void;
@@ -22,6 +23,7 @@ export const CanvasContext = createContext<CanvasContext>({
     pixels: [],
     availableColors: [],
     paint: () => { },
+    erase: () => { },
     chatEnabled: false,
     setChatEnabled: () => { },
     sendMessage: () => { },

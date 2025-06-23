@@ -83,6 +83,14 @@ export default function CanvasProvider({
         conn.reducers.addPixel(x, y);
     };
 
+    const erase = (x: number, y: number) => {
+        if (!conn || canvasId === null) return;
+        const pixelId = pixels.find((p) => p.x === x && p.y === y)?.id;
+        if (pixelId) {
+            conn.reducers.erasePixel(pixelId);
+        }
+    };
+
     const sendMessage = (text: string) => {
         if (!conn || canvasId === null) return;
         conn.reducers.sendMessage(text);
@@ -97,6 +105,7 @@ export default function CanvasProvider({
                 pixels,
                 availableColors,
                 paint,
+                erase,
                 sendMessage,
                 chatEnabled,
                 setChatEnabled,
