@@ -46,6 +46,8 @@ import { CreateBoard } from "./create_board_reducer.ts";
 export { CreateBoard };
 import { DeleteMessage } from "./delete_message_reducer.ts";
 export { DeleteMessage };
+import { ErasePixel } from "./erase_pixel_reducer.ts";
+export { ErasePixel };
 import { JoinBoard } from "./join_board_reducer.ts";
 export { JoinBoard };
 import { LeaveBoard } from "./leave_board_reducer.ts";
@@ -145,6 +147,10 @@ const REMOTE_MODULE = {
       reducerName: "delete_message",
       argsType: DeleteMessage.getTypeScriptAlgebraicType(),
     },
+    erase_pixel: {
+      reducerName: "erase_pixel",
+      argsType: ErasePixel.getTypeScriptAlgebraicType(),
+    },
     join_board: {
       reducerName: "join_board",
       argsType: JoinBoard.getTypeScriptAlgebraicType(),
@@ -205,6 +211,7 @@ export type Reducer = never
 | { name: "ClientDisconnected", args: ClientDisconnected }
 | { name: "CreateBoard", args: CreateBoard }
 | { name: "DeleteMessage", args: DeleteMessage }
+| { name: "ErasePixel", args: ErasePixel }
 | { name: "JoinBoard", args: JoinBoard }
 | { name: "LeaveBoard", args: LeaveBoard }
 | { name: "SendMessage", args: SendMessage }
@@ -290,6 +297,22 @@ export class RemoteReducers {
 
   removeOnDeleteMessage(callback: (ctx: ReducerEventContext, messageId: number) => void) {
     this.connection.offReducer("delete_message", callback);
+  }
+
+  erasePixel(id: bigint) {
+    const __args = { id };
+    let __writer = new BinaryWriter(1024);
+    ErasePixel.getTypeScriptAlgebraicType().serialize(__writer, __args);
+    let __argsBuffer = __writer.getBuffer();
+    this.connection.callReducer("erase_pixel", __argsBuffer, this.setCallReducerFlags.erasePixelFlags);
+  }
+
+  onErasePixel(callback: (ctx: ReducerEventContext, id: bigint) => void) {
+    this.connection.onReducer("erase_pixel", callback);
+  }
+
+  removeOnErasePixel(callback: (ctx: ReducerEventContext, id: bigint) => void) {
+    this.connection.offReducer("erase_pixel", callback);
   }
 
   joinBoard(boardId: number) {
@@ -405,6 +428,11 @@ export class SetReducerFlags {
   deleteMessageFlags: CallReducerFlags = 'FullUpdate';
   deleteMessage(flags: CallReducerFlags) {
     this.deleteMessageFlags = flags;
+  }
+
+  erasePixelFlags: CallReducerFlags = 'FullUpdate';
+  erasePixel(flags: CallReducerFlags) {
+    this.erasePixelFlags = flags;
   }
 
   joinBoardFlags: CallReducerFlags = 'FullUpdate';
