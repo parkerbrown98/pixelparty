@@ -85,7 +85,13 @@ export default function CanvasProvider({
 
     const erase = (x: number, y: number) => {
         if (!conn || canvasId === null) return;
-        const pixelId = pixels.find((p) => p.x === x && p.y === y)?.id;
+        const pixelId = Array.from(pixels)
+            .sort(
+                (a, b) =>
+                    b.createdAt.toDate().getTime() -
+                    a.createdAt.toDate().getTime()
+            )
+            .find((p) => p.x === x && p.y === y)?.id;
         if (pixelId) {
             conn.reducers.erasePixel(pixelId);
         }
