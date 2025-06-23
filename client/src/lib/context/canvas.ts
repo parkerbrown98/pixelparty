@@ -5,7 +5,7 @@ export interface CanvasContext {
     canvasId: number | null;
     messages: Message[];
     users: User[];
-    pixels: Pixel[];
+    pixels: Map<string, Pixel>;
     availableColors: string[];
     paint: (x: number, y: number) => void;
     erase: (x: number, y: number) => void;
@@ -20,7 +20,7 @@ export const CanvasContext = createContext<CanvasContext>({
     canvasId: null,
     messages: [],
     users: [],
-    pixels: [],
+    pixels: new Map<string, Pixel>(),
     availableColors: [],
     paint: () => { },
     erase: () => { },

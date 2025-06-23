@@ -13,7 +13,7 @@ export default function CanvasProvider({
         useAppContext();
     const { ourUser, users } = useUsers();
     const [messages, setMessages] = useState<Message[]>([]);
-    const [pixels, setPixels] = useState<Pixel[]>([]);
+    const [pixels, setPixels] = useState<Map<string, Pixel>>(new Map());
     const [chatEnabled, setChatEnabled] = useState(true);
     const [gridEnabled, setGridEnabled] = useState(true);
 
@@ -49,14 +49,43 @@ export default function CanvasProvider({
             const onMsgDel = (_: EventContext, m: Message) =>
                 setMessages((prev) => prev.filter((x) => x.id !== m.id));
 
-            const onPxInsert = (_: EventContext, p: Pixel) =>
-                setPixels((prev) => [...prev, p]);
-            const onPxUpdate = (_: EventContext, oldP: Pixel, newP: Pixel) =>
-                setPixels((prev) =>
-                    prev.map((p) => (p.id === oldP.id ? newP : p))
-                );
-            const onPxDel = (_: EventContext, p: Pixel) =>
-                setPixels((prev) => prev.filter((x) => x.id !== p.id));
+            const onPxInsert = (_ctx: EventContext, p: Pixel) => {
+                setPixels((prev) => {
+                    const map = new Map(prev);
+                    const key = `${p.x},${p.y}`;
+                    if (!p.color) {
+                        map.delete(key);
+                    } else {
+                        map.set(key, p);
+                    }
+
+                    return map;
+                });
+            };
+
+            const onPxUpdate = (_: EventContext, oldP: Pixel, newP: Pixel) => {
+                setPixels((prev) => {
+                    const map = new Map(prev);
+                    const key = `${oldP.x},${oldP.y}`;
+                    if (!newP.color) {
+                        map.delete(key);
+                    } else {
+                        map.set(`${newP.x},${newP.y}`, newP);
+                        if (key !== `${newP.x},${newP.y}`) {
+                            map.delete(key);
+                        }
+                    }
+                    return map;
+                });
+            };
+
+            const onPxDel = (_: EventContext, p: Pixel) => {
+                setPixels((prev) => {
+                    const map = new Map(prev);
+                    map.delete(`${p.x},${p.y}`);
+                    return map;
+                });
+            };
 
             // Register handlers
             conn.db.message.onInsert(onMsgInsert);
@@ -85,16 +114,7 @@ export default function CanvasProvider({
 
     const erase = (x: number, y: number) => {
         if (!conn || canvasId === null) return;
-        const pixelId = Array.from(pixels)
-            .sort(
-                (a, b) =>
-                    b.createdAt.toDate().getTime() -
-                    a.createdAt.toDate().getTime()
-            )
-            .find((p) => p.x === x && p.y === y)?.id;
-        if (pixelId) {
-            conn.reducers.erasePixel(pixelId);
-        }
+        conn.reducers.erasePixel(x, y);
     };
 
     const sendMessage = (text: string) => {

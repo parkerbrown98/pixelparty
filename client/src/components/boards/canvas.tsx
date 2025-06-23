@@ -43,11 +43,6 @@ export default function Canvas() {
             // Background
             gfx.rect(0, 0, width, height).fill(0xffffff);
 
-            // Pixels
-            for (const pixel of pixels) {
-                gfx.rect(pixel.x, pixel.y, 1, 1).fill(pixel.color);
-            }
-
             // Grid
             if (gridEnabled) {
                 const gridSize = 1;
@@ -62,6 +57,14 @@ export default function Canvas() {
                         .lineTo(width, y)
                         .stroke({ width: 0.2, color: 0xcccccc, alpha: 0.5 });
                 }
+            }
+
+            // Pixels
+            for (const [key, pixel] of pixels.entries()) {
+                if (!pixel.color) continue; // Skip empty pixels
+
+                const [x, y] = key.split(",").map(Number);
+                gfx.rect(x, y, 1, 1).fill(pixel.color);
             }
 
             // Mouse position
