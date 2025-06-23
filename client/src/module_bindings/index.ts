@@ -299,19 +299,19 @@ export class RemoteReducers {
     this.connection.offReducer("delete_message", callback);
   }
 
-  erasePixel(id: bigint) {
-    const __args = { id };
+  erasePixel(x: number, y: number) {
+    const __args = { x, y };
     let __writer = new BinaryWriter(1024);
     ErasePixel.getTypeScriptAlgebraicType().serialize(__writer, __args);
     let __argsBuffer = __writer.getBuffer();
     this.connection.callReducer("erase_pixel", __argsBuffer, this.setCallReducerFlags.erasePixelFlags);
   }
 
-  onErasePixel(callback: (ctx: ReducerEventContext, id: bigint) => void) {
+  onErasePixel(callback: (ctx: ReducerEventContext, x: number, y: number) => void) {
     this.connection.onReducer("erase_pixel", callback);
   }
 
-  removeOnErasePixel(callback: (ctx: ReducerEventContext, id: bigint) => void) {
+  removeOnErasePixel(callback: (ctx: ReducerEventContext, x: number, y: number) => void) {
     this.connection.offReducer("erase_pixel", callback);
   }
 

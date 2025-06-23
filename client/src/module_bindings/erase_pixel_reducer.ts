@@ -34,7 +34,8 @@ import {
 } from "@clockworklabs/spacetimedb-sdk";
 
 export type ErasePixel = {
-  id: bigint,
+  x: number,
+  y: number,
 };
 
 /**
@@ -47,7 +48,8 @@ export namespace ErasePixel {
   */
   export function getTypeScriptAlgebraicType(): AlgebraicType {
     return AlgebraicType.createProductType([
-      new ProductTypeElement("id", AlgebraicType.createU64Type()),
+      new ProductTypeElement("x", AlgebraicType.createU32Type()),
+      new ProductTypeElement("y", AlgebraicType.createU32Type()),
     ]);
   }
 

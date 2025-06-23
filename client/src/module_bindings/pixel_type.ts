@@ -37,7 +37,7 @@ export type Pixel = {
   boardId: number,
   x: number,
   y: number,
-  color: string,
+  color: string | undefined,
   identity: Identity,
   createdAt: Timestamp,
 };
@@ -56,7 +56,7 @@ export namespace Pixel {
       new ProductTypeElement("boardId", AlgebraicType.createU32Type()),
       new ProductTypeElement("x", AlgebraicType.createU32Type()),
       new ProductTypeElement("y", AlgebraicType.createU32Type()),
-      new ProductTypeElement("color", AlgebraicType.createStringType()),
+      new ProductTypeElement("color", AlgebraicType.createOptionType(AlgebraicType.createStringType())),
       new ProductTypeElement("identity", AlgebraicType.createIdentityType()),
       new ProductTypeElement("createdAt", AlgebraicType.createTimestampType()),
     ]);
