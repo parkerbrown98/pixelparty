@@ -5,7 +5,7 @@ mod message_reducers;
 mod pixel_reducers;
 mod user_reducers;
 
-#[derive(SpacetimeType)]
+#[derive(SpacetimeType, Debug, PartialEq)]
 pub enum ToolType {
     Brush = 0,
     Eraser = 1,

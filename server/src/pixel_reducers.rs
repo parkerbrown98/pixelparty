@@ -1,8 +1,8 @@
 use spacetimedb::Table;
 use spacetimedb::{reducer, ReducerContext};
 
-use crate::user;
 use crate::{board, pixel, Pixel};
+use crate::{user, ToolType};
 
 #[reducer]
 pub fn add_pixel(ctx: &ReducerContext, x: u32, y: u32) {
@@ -41,6 +41,52 @@ pub fn add_pixel(ctx: &ReducerContext, x: u32, y: u32) {
     } else {
         log::warn!(
             "Attempted to add pixel without a valid user: {}",
+            ctx.sender
+        );
+    }
+}
+
+#[reducer]
+pub fn erase_pixel(ctx: &ReducerContext, id: u64) {
+    // Make sure we're in a board
+    if let Some(user) = ctx.db.user().identity().find(ctx.sender) {
+        if user.current_tool != ToolType::Eraser {
+            log::warn!(
+                "User {} attempted to erase pixel with non-eraser tool: {:?}",
+                ctx.sender,
+                user.current_tool
+            );
+            return;
+        }
+        if let Some(board_id) = user.current_board {
+            if let Some(pixel) = ctx.db.pixel().id().find(id) {
+                if pixel.board_id == board_id && (pixel.identity == ctx.sender || user.admin) {
+                    // Adding a new pixel with the same coordinates and white color
+                    ctx.db.pixel().insert(Pixel {
+                        id: 0, // Auto-incremented by the database
+                        board_id: pixel.board_id,
+                        x: pixel.x,
+                        y: pixel.y,
+                        color: "#FFFFFF".to_string(),
+                        identity: ctx.sender,
+                        created_at: ctx.timestamp,
+                    });
+                } else {
+                    log::warn!(
+                        "User {} attempted to erase pixel {} not belonging to their board or identity",
+                        ctx.sender,
+                        id
+                    );
+                }
+            } else {
+                log::warn!("Attempted to erase non-existent pixel: {}", id);
+            }
+        } else {
+            log::warn!("User {} is not in any board", ctx.sender);
+        }
+    } else {
+        log::warn!(
+            "Attempted to erase pixel without a valid user: {}",
             ctx.sender
         );
     }
