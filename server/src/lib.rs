@@ -58,7 +58,7 @@ pub struct Pixel {
     board_id: u32,
     x: u32,
     y: u32,
-    color: String,
+    color: Option<String>,
     #[index(btree)]
     identity: Identity,
     created_at: Timestamp,
