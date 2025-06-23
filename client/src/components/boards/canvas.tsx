@@ -54,13 +54,13 @@ export default function Canvas() {
                 for (let x = 0; x < width; x += gridSize) {
                     gfx.moveTo(x, 0)
                         .lineTo(x, height)
-                        .stroke({ width: 0.2, color: 0xcccccc });
+                        .stroke({ width: 0.2, color: 0xcccccc, alpha: 0.5 });
                 }
 
                 for (let y = 0; y < height; y += gridSize) {
                     gfx.moveTo(0, y)
                         .lineTo(width, y)
-                        .stroke({ width: 0.2, color: 0xcccccc });
+                        .stroke({ width: 0.2, color: 0xcccccc, alpha: 0.5 });
                 }
             }
 
