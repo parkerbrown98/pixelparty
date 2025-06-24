@@ -7,7 +7,7 @@ function App() {
     return (
         <AppProvider>
             <UserProvider>
-                <div className="h-screen flex flex-col">
+                <div className="h-screen flex flex-col overflow-hidden">
                     <Navbar />
                     <Layout />
                 </div>
