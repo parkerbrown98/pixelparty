@@ -2,11 +2,19 @@ import classNames from "classnames";
 import { useCanvas } from "../../lib/context/canvas";
 import { useState, useRef, useEffect } from "react";
 import { useUsers } from "../../lib/context/user";
+import { useAppContext } from "../../lib/context/app";
 
 export default function ChatBox() {
-    const { users } = useUsers();
-    const { messages, sendMessage, chatEnabled, users: canvasUsers } = useCanvas();
+    const { boards } = useAppContext();
+    const { users, ourUser } = useUsers();
+    const {
+        messages,
+        sendMessage,
+        chatEnabled,
+        users: canvasUsers,
+    } = useCanvas();
     const [message, setMessage] = useState<string>("");
+    const board = boards.find((b) => b.id === ourUser?.currentBoard);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const messagesWithUsers = messages.map((message) => ({
         ...message,
@@ -40,7 +48,7 @@ export default function ChatBox() {
             )}
         >
             <div className="flex items-center justify-between p-2 border-b border-gray-300">
-                <h4>Messages</h4>
+                <h4>{board?.name ?? "Messages"}</h4>
                 <p className="text-sm text-gray-500">
                     {canvasUsers.length}{" "}
                     {canvasUsers.length === 1 ? "user" : "users"} online
