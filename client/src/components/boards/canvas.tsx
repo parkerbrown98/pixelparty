@@ -74,12 +74,29 @@ export default function Canvas() {
                 mouseY >= 0 &&
                 mouseY < height
             ) {
-                gfx.rect(mouseX, mouseY, 1, 1)
-                    .stroke({ width: 0.2, color: 0x050505 })
-                    .fill(ourUser?.currentColor || DEFAULT_COLOR);
+                if (ourUser?.currentTool.tag === "Brush") {
+                    gfx.rect(mouseX, mouseY, 1, 1)
+                        .stroke({ width: 0.2, color: 0x050505 })
+                        .fill(ourUser?.currentColor || DEFAULT_COLOR);
+                } else if (ourUser?.currentTool.tag === "Eraser") {
+                    // Draw box with red border for eraser
+                    gfx.rect(mouseX, mouseY, 1, 1)
+                        .stroke({ width: 0.2, color: 0xff0000 })
+                        .fill(0xffffff);
+                }
             }
         },
-        [width, height, zoom, mouseX, mouseY, pixels, gridEnabled]
+        [
+            width,
+            height,
+            zoom,
+            mouseX,
+            mouseY,
+            pixels,
+            gridEnabled,
+            ourUser?.currentTool,
+            ourUser?.currentColor,
+        ]
     );
 
     const handleMouseDown = (event: FederatedPointerEvent) => {
